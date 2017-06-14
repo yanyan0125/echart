@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<script type="text/javascript" src="zepto.js"></script>
+		<script src="konva.min.js"></script>
+		<script src="echarts.min.js"></script>
+		<style>
+			*{
+				padding: 0;
+				margin: 0;
+			}
+			.main{
+				width: 100%;
+				height:130px;
+				padding: 5px 0;
+			}
+			.container{
+				/*position: absolute;*/
+				
+			}
+			
+		</style>
+	</head>
+	<body>
+		<div id="main" class="main">
+			
+			
+		</div>
+		<!--<div id="container" class="container"></div>-->
+		<script type="text/javascript">
+		
+			
+			
+		 var myChart = echarts.init(document.getElementById('main'));
+		 //x轴内容
+        var xData = function() {
+		    var data = [];
+		    for (var i = 1; i < 5; i++) {
+		        data.push(i + "月份");
+		    }
+		    return data;
+		}();
+		
+		var data1 = [
+                9.00,
+                9.40,
+                9.80,
+                10.20
+             
+            ],
+            data2 = [],
+            colorList = [],
+            styleList = [];
+           
+
+var option1 = {
+    backgroundColor: "#fff", //背景颜色
+    //图表定位
+    "grid": {
+        "borderWidth":0,
+        "top": 110,
+        "bottom": 100,
+    },
+    
+	//不允许拖拽
+    "calculable": false, 
+    
+    //加入横轴的内容
+    "xAxis": [{
+        "type": "category",
+        "axisLine": {
+        	show: true,
+            "lineStyle": {
+                "color": '#222',
+                "fontSize": 10
+            	
+        	}
+        },
+        "splitLine": {
+            "show": false  //分割线
+        },
+        "axisTick": {
+            "show": false  //不显示坐标轴刻度
+        },
+        "splitArea": {
+            "show": false
+        },
+        "axisLabel": {
+            "interval": 0,
+
+        },
+        "data": xData
+    }],
+    
+    
+    //y轴内容
+    "yAxis": [{
+
+        "type": "value",
+        splitNumber:2,
+        min:5,
+        max: 13,
+        "splitLine": {
+            "show": false
+        },
+        "axisLine": {
+        	show: true,
+            lineStyle: {
+                color: '#222',
+                fontSize: 10
+            }
+        },
+        "axisTick": {
+            "show": false
+        },
+        "axisLabel": {
+            "interval": 0,
+
+        },
+        "splitArea": {
+            "show": false
+        },
+
+    }],
+
+	
+    "series": [{
+            "name": "女",
+            "type": "bar",
+            "stack": "总量",
+            "barMaxWidth": 35,
+            "barGap": "10%",
+            "itemStyle": {
+                "normal": {
+                    "color": "#94bdff",
+                    "label": {
+                        "show": true,
+                        "textStyle": {
+                            "color": "#222",
+                            "fontSize": 10
+                        },
+                        "position": "top",
+                        formatter: function(p) {
+                       
+                        }
+                    },
+   
+                }
+                
+            },
+            "data": data1
+        }
+
+       
+    ]
+};
+
+
+ myChart.setOption(option1);
+ 
+ var option2 = {
+		"series": [{
+            "name": "女",
+            "type": "bar",
+            "stack": "总量",
+            "barMaxWidth": 35,
+            "barGap": "10%",
+            "itemStyle": {
+                "normal": {
+                    color: function (params){
+            
+                        return colorList[params.dataIndex];
+                    },
+                    "label": {
+                        "show": true,
+                        "textStyle": {
+                            "color": '#222',
+                            "fontSize": 10
+                        },
+                        "position": "top",
+                        formatter: function(p) {
+                     		 
+                        }
+                    },
+   
+                }
+                
+            },
+            "data":data1
+        },
+
+        {
+            "name": "男",
+            "type": "bar",
+            "stack": "总量",
+            "itemStyle": {
+                "normal": {
+                    "color": "#ffc08a",
+                    "barBorderRadius": 0,
+                    "label": {
+                        "position": "top",
+                        formatter: function(p) {                         
+                        }
+                    }
+                }
+            },
+            "data": data2
+        }
+    ]
+	}
+ 
+ 
+myChart.on('click', function (params) {
+	var item = '',
+		itColor='',
+		styleColor='';
+	for(var i=0; i<data1.length; i++){
+		if(i<params.dataIndex){
+			data2[i] = data1[params.dataIndex]-data1[i];
+			console.log(item)
+		}else{
+			data2[i] = 0;
+		};		
+		if(i==params.dataIndex){
+			itColor = '#629eff';
+		}else{
+			itColor = '#94bdff';
+			
+		}	
+		if(i==params.dataIndex){
+			styleColor = '#222';
+		}else{
+			styleColor = '#fff';
+			
+		}
+		colorList[i] = itColor;		
+		styleList[i] = styleColor;		
+		console.log(styleList)
+	}
+	
+	myChart.setOption(option2);
+});
+
+//var width = $('#container').width();
+//		    var height = $('#container').height();
+//		    console.log(height);
+//		    var stage = new Konva.Stage({
+//		      container: 'container',
+//		      width: 400,
+//		      height: 400
+//		    });
+//		    
+//		    var layer = new Konva.Layer();
+//		     var redLine = new Konva.Line({
+//		      points: [30, 0, 30, 300, 300,300],
+//		      stroke: '#629eff',
+//		      strokeWidth: 1,
+//		    });
+// 			layer.add(redLine);
+//		    stage.add(layer);
+
+ // 使用刚指定的配置项和数据显示图表。
+       
+    </script>
+	</body>
+</html>
